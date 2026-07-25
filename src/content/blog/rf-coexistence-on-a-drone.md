@@ -1,70 +1,72 @@
 ---
 title: 'Protecting the Control Link: RF Coexistence on a Multi-Radio Drone'
-description: 'A drone is a flying RF coexistence problem. Here is how I planned the spectrum on an AI-piloted build so the one radio that matters most never has to fight for air.'
+description: "A drone is a flying RF coexistence problem, and one of the radios is not allowed to fail. Here's how I split up the spectrum so the link that matters never has to fight for air."
 pubDate: 'Jul 25 2026'
 ---
 
-Most of my work lives in enterprise Wi-Fi, where "coexistence" means keeping a few dozen access points and a swarm of client devices from stepping on each other in the 2.4 and 5 GHz bands. The stakes are real but recoverable: a retransmit, a slower session, an annoyed user.
+Day job, I do enterprise Wi-Fi. "Coexistence" there means keeping a few dozen access points and a pile of client devices from stepping on each other across 2.4 and 5 GHz. When it goes sideways you get a retransmit, a slow session, a cranky user. Annoying, sure, but nobody gets hurt.
 
-Then I started building an AI-piloted drone, and coexistence got a lot more literal. On an aircraft, several radios share a few square inches of airframe, and one of them - the manual control link - cannot be allowed to fail. If it drops at the wrong moment, the thing falls out of the sky. That reframes spectrum planning from an optimization problem into a safety problem, and it turns out the discipline transfers almost directly from the day job. This post walks through how I allocated the bands, and - more usefully - the *reasoning* that got me there, because the framework is portable to any multi-radio system.
+Then I started building a drone that flies itself, and coexistence got a lot more literal.
 
-## The cast of radios
+On an aircraft you've got several radios crammed into a few square inches, and one of them - the manual control link - is not allowed to fail. If it drops at the wrong second, the thing falls out of the sky. That turns spectrum planning from "optimize the network" into "don't put a drone through somebody's window," which is a different kind of problem. The good news is the actual discipline is the same one I use at work. So here's how I split up the bands, and more to the point, how I reasoned about it, because the thinking works on anything with more than one radio bolted to it.
 
-The build carries three independent RF links, each with a different job:
+## The radios
 
-- **2.4 GHz - manual control (ELRS).** ExpressLRS between a hand controller and the flight controller. This is the safety-critical link: it's how a human takes over. It is the must-have.
-- **915 MHz - telemetry (SiK radio).** A MAVLink link down to a ground station running QGroundControl. Long range, low bandwidth - attitude, position, battery, mode.
-- **5 GHz - companion link (Wi-Fi).** The onboard Linux companion computer's Wi-Fi, bridging a live view and telemetry to a tablet in the field.
+Three RF links on the build, each doing its own job:
 
-There's a fourth high-bandwidth stream - the gimbal camera's video - but I deliberately kept that on **wired Ethernet** between the camera and the companion computer. More on why that's a coexistence decision in itself below.
+- **2.4 GHz - manual control (ELRS).** ExpressLRS from a hand controller to the flight controller. This is the one that matters. It's how a human grabs the wheel. Non-negotiable.
+- **915 MHz - telemetry (SiK radio).** MAVLink back to a ground station running QGroundControl. Long range, barely any bandwidth. Attitude, position, battery, mode.
+- **5 GHz - companion link (Wi-Fi).** The onboard Linux computer's Wi-Fi, throwing a live view and telemetry out to a tablet in the field.
 
-## The one principle that drove every choice
+There's a fourth heavy stream, the gimbal camera video, but I kept that on **wired Ethernet** on purpose. That's a coexistence decision too, and I'll get to it.
 
-Here it is, and everything else falls out of it:
+## The one rule everything hangs on
 
-> **The control link is the must-have. Every other link is expendable. Never let an expendable link share a band with the safety-critical one.**
+Here's the whole thing in a sentence:
 
-In enterprise wireless we protect critical traffic with QoS, band steering, and careful channel planning. On the drone the equivalent move is blunter and more important: physically reserve the control link's band and keep everything else off it. A dropped video feed is an inconvenience. A desensed control receiver is a crash.
+> **The control link is the must-have. Everything else is expendable. Never let an expendable link share a band with the safety-critical one.**
 
-## The decisions
+At work I protect the important traffic with QoS, band steering, careful channel plans. On the drone the move is blunter: physically wall off the control link's band and keep everything else out of it. A dropped video feed is a shrug. A desensed control receiver is a crash. Those aren't the same thing, so I don't treat them the same.
 
-**2.4 GHz belongs to control, uncontested.** ELRS is the control link, so 2.4 GHz is reserved for it and nothing else on the aircraft transmits there. There's a wrinkle that matters: ELRS is a **frequency-hopping (FHSS)** system - it spreads across the entire 2.4 GHz band by design. That has a direct consequence most people miss: **you cannot channel-plan around a frequency hopper.** There's no "quiet corner" of 2.4 to tuck another radio into, because the hopper is, over time, everywhere. Your only real tool is to keep other 2.4 GHz emitters off the aircraft entirely.
+## The calls I made
 
-**The tempting mistake: "just put the Wi-Fi on 2.4 for range."** My first instinct for the companion link was 2.4 GHz - better range and wall penetration than 5. It's the wrong call here, for three reasons that stack:
+**2.4 GHz is control's, and control's alone.** ELRS owns 2.4, and nothing else on the aircraft transmits there. One wrinkle worth knowing: ELRS is frequency-hopping, so it smears across the entire 2.4 band by design. That trips people up, because it means **you can't channel-plan around it.** There's no quiet corner to tuck a second radio into. Over time, the hopper is everywhere. Your only real move is to keep other 2.4 GHz transmitters off the aircraft, full stop.
 
-1. **It shares a band with the control link.** Immediate violation of the one principle.
-2. **Physical proximity makes it worse.** The Wi-Fi radio and the ELRS receiver sit inches apart on the airframe. A Wi-Fi transmitter that close is a strong in-band interferer right on top of a sensitive receiver - classic receiver desense / blocking. Frequency separation on paper doesn't save you when the aggressor is bolted next to the victim's antenna.
-3. **The range argument is moot anyway.** The companion Wi-Fi is a close-in convenience link; the long-range job belongs to the 915 MHz telemetry radio. So I'd be taking on real interference risk to the *critical* link to buy range on a link that doesn't need it.
+**The trap I almost walked into: "just put the Wi-Fi on 2.4 for range."** That was my first instinct for the companion link, since 2.4 reaches further and punches through walls better than 5. Wrong call, for three reasons that pile up:
 
-So the companion Wi-Fi went to **5 GHz** - a different band, well clear of the control link.
+1. **It's in the control link's band.** Breaks the one rule right out of the gate.
+2. **They're inches apart.** The Wi-Fi radio and the ELRS receiver are bolted to the same little airframe. A Wi-Fi transmitter that close is a loud in-band interferer sitting right on top of a sensitive receiver. Textbook desense. Frequency separation on a spreadsheet doesn't save you when the offender is zip-tied next to the victim's antenna.
+3. **The range doesn't even matter.** The companion Wi-Fi is a close-in convenience link. The long-haul job belongs to the 915 MHz radio. So I'd be handing real interference risk to the *critical* link to buy range on a link that doesn't need any.
 
-**Pin the 5 GHz Wi-Fi to a non-DFS channel.** 5 GHz has a trap for real-time links: DFS (Dynamic Frequency Selection) channels must vacate if they detect radar, and that eviction can happen *mid-flight*. A control-adjacent telemetry link that can silently drop for 60 seconds because a weather radar swept past is a liability. So I pinned the AP to a **fixed non-DFS channel** (36/40/44/48 in the US) - no radar-avoidance surprises. This is the kind of thing that's easy to ignore indoors and costly to ignore on an aircraft.
+So the companion Wi-Fi went to **5 GHz**, out of the control link's hair entirely.
 
-**915 MHz carries the long-range telemetry.** The SiK radio on 915 MHz is the link that actually needs distance, and it's comfortably clear of both 2.4 and 5 GHz. Low bandwidth, long reach - exactly right for MAVLink.
+**Pin the 5 GHz Wi-Fi to a non-DFS channel.** 5 GHz has a nasty little trap for anything real-time: DFS channels have to bail the second they think they hear radar, and that can happen *mid-flight*. A link riding shotgun to my control setup that just vanishes for 60 seconds because a weather radar swept past? Hard no. So I locked the AP to a **fixed non-DFS channel** (36/40/44/48 in the US). No radar-avoidance surprises. Easy to ignore indoors. Expensive to ignore at altitude.
 
-**Move the bandwidth hog to wire.** The camera's video is the fattest stream on the system, and putting it on the air would mean either eating spectrum or compressing hard. Running it over wired Ethernet to the companion computer takes the single biggest RF consumer *off the air entirely*. The cleanest interference is the transmission you never make.
+**915 MHz does the long haul.** The SiK radio on 915 is the one that actually needs distance, and it's nowhere near 2.4 or 5. Low bandwidth, long reach. Exactly what MAVLink wants.
 
-## What ends up on the airframe
+**Send the bandwidth hog down a wire.** The camera video is the fattest stream in the whole system. Put it on the air and I'm either burning spectrum or compressing it to mush. Running it over wired Ethernet to the companion computer takes my single biggest RF consumer *off the air completely*. The cleanest interference is the transmission you never make.
+
+## What actually ends up on the airframe
 
 | Band | Link | Role | Why it's here |
 |------|------|------|---------------|
-| 2.4 GHz | ELRS | Manual control | Safety-critical; kept uncontested |
+| 2.4 GHz | ELRS | Manual control | Safety-critical, kept uncontested |
 | 915 MHz | SiK | Telemetry | Long range, low bandwidth |
 | 5 GHz | Wi-Fi | Companion / field view | Close-in, off the control band, non-DFS |
 | *(wired)* | Ethernet | Camera video | Biggest stream, kept off the air |
 
-Three clean bands, no overlap, and the one link that can't fail has its spectrum to itself.
+Three clean bands, zero overlap, and the one link that can't fail has its spectrum to itself.
 
-## The parts that generalize
+## The part that isn't really about drones
 
-Strip away the drone and this is just good RF engineering, which is why it maps so cleanly back to the enterprise world:
+Take the drone out of it and this is just RF engineering, which is exactly why it maps straight back to the day job:
 
-- **Separate by priority, not just by frequency.** Decide what traffic is critical and give it uncontested spectrum. Everything else plans around it.
-- **Physical separation is a first-class variable.** Co-located radios desense each other regardless of what the channel plan says. Antenna placement and isolation matter as much as frequency selection - a lesson every WLAN engineer who's fought a co-located BLE or Zigbee radio already knows.
-- **Beware channels that can disappear.** DFS is fine for best-effort; it's a hazard for links you're depending on in real time. Know which of your channels can be evicted.
-- **You can't out-plan a frequency hopper.** FHSS systems occupy their whole band over time. Coexistence with them is about isolation and separation, not channel selection.
-- **The best interference mitigation is not transmitting.** Moving the heaviest stream to wire removed an entire coexistence problem instead of managing it.
+- **Separate by priority, not just frequency.** Figure out what traffic is critical, give it uncontested spectrum, make everything else plan around it.
+- **Physical separation counts as much as the channel plan.** Co-located radios desense each other no matter what your spreadsheet says. Antenna placement and isolation matter every bit as much as which channel you picked. Anybody who's fought a co-located BLE or Zigbee radio already knows this one in their bones.
+- **Watch out for channels that can disappear.** DFS is fine for best-effort. It's a hazard for anything you're leaning on in real time. Know which of your channels can get evicted.
+- **You can't out-plan a frequency hopper.** FHSS gear owns its whole band over time. Living with it is about isolation and separation, not channel selection.
+- **The best interference fix is not transmitting.** Moving the heaviest stream to wire didn't manage a coexistence problem, it deleted one.
 
-None of this is exotic. It's the same physical-layer discipline that makes an enterprise deployment reliable - deciding what matters, protecting it deliberately, and respecting the fact that RF is a shared physical medium that doesn't care about your logical design. The drone just raises the stakes from "slow Wi-Fi" to "controlled flight," which is a very effective way to make you take the physical layer seriously.
+None of this is exotic. It's the same physical-layer discipline that makes an enterprise deployment boring and reliable: decide what matters, protect it on purpose, and respect the fact that RF is a shared physical medium that does not care one bit about your logical design. The drone just swaps the consequence from "slow Wi-Fi" to "controlled flight," which turns out to be a really effective way to start taking the physical layer seriously.
 
-*This is the first in a series documenting an AI-piloted drone build - the RF, the edge AI, and the flight-control integration behind it. More to come.*
+*This is the first in a series on an AI-piloted drone build - the RF, the edge AI, and the flight-control guts behind it. More coming.*
