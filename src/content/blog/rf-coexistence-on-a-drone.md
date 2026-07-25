@@ -4,7 +4,7 @@ description: "A drone is a flying RF coexistence problem, and one of the radios 
 pubDate: 'Jul 25 2026'
 ---
 
-Day job, I'm a network engineer, and a big slice of that is enterprise Wi-Fi. "Coexistence" there means keeping a few dozen access points and a pile of client devices from stepping on each other across 2.4 and 5 GHz. When it goes sideways you get a retransmit, a slow session, a cranky user. Annoying, sure, but nobody gets hurt.
+Day job, I'm a network engineer, and a big slice of that is enterprise Wi-Fi. "Coexistence" there means keeping a few dozen access points and a pile of client devices from stepping on each other across 2.4, 5, and now 6 GHz. When it goes sideways you get a retransmit, a slow session, a cranky user. Annoying, sure, but nobody gets hurt.
 
 Then I started building a drone that flies itself, and coexistence got a lot more literal.
 
@@ -39,6 +39,8 @@ At work I protect the important traffic with QoS, band steering, careful channel
 3. **The range doesn't even matter.** The companion Wi-Fi is a close-in convenience link. The long-haul job belongs to the 915 MHz radio. So I'd be handing real interference risk to the *critical* link to buy range on a link that doesn't need any.
 
 So the companion Wi-Fi went to **5 GHz**, out of the control link's hair entirely.
+
+(Honest aside: 6 GHz would have been the even cleaner answer. It's the newest Wi-Fi band, wide open, no legacy device crowding it, and most of it isn't even DFS territory. It just wasn't on the table here, because the onboard Wi-Fi radio only does 2.4 and 5. If I were speccing this from scratch today, 6 GHz is where I'd want the companion link to live.)
 
 **Pin the 5 GHz Wi-Fi to a non-DFS channel.** 5 GHz has a nasty little trap for anything real-time: DFS channels have to bail the second they think they hear radar, and that can happen *mid-flight*. A link riding shotgun to my control setup that just vanishes for 60 seconds because a weather radar swept past? Hard no. So I locked the AP to a **fixed non-DFS channel** (36/40/44/48 in the US). No radar-avoidance surprises. Easy to ignore indoors. Expensive to ignore at altitude.
 
