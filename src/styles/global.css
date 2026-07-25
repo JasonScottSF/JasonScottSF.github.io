@@ -85,6 +85,22 @@ input {
 }
 table {
 	width: 100%;
+	border-collapse: collapse;
+	margin-bottom: 1.5em;
+	font-size: 0.95em;
+	display: block;
+	overflow-x: auto;
+}
+th,
+td {
+	border: 1px solid rgb(var(--gray-light));
+	padding: 8px 12px;
+	text-align: left;
+	overflow-wrap: break-word;
+}
+th {
+	background: rgb(var(--gray-light));
+	font-weight: 700;
 }
 img {
 	max-width: 100%;
@@ -119,6 +135,29 @@ hr {
 	}
 	main {
 		padding: 1em;
+	}
+	h1 {
+		font-size: 2.2em;
+	}
+	h2 {
+		font-size: 1.7em;
+	}
+	h3 {
+		font-size: 1.4em;
+	}
+	h4 {
+		font-size: 1.2em;
+	}
+	blockquote {
+		font-size: 1.1em;
+		padding-left: 12px;
+	}
+	table {
+		font-size: 0.85em;
+	}
+	th,
+	td {
+		padding: 6px 8px;
 	}
 }
 
