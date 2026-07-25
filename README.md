@@ -1,6 +1,6 @@
 # FlightLab
 
-Source for [jasonscottsf.github.io](https://jasonscottsf.github.io) - a technical blog by Jason Scott on wireless networking, edge AI, and autonomous flight, documenting an AI-piloted drone built from the ground up.
+Source for [jasonscottsf.github.io](https://jasonscottsf.github.io) - a technical blog by Jason Scott on networking, edge AI, and autonomous flight, documenting an AI-piloted drone built from the ground up.
 
 Built with [Astro](https://astro.build), deployed to GitHub Pages via GitHub Actions on every push to `main`.
 

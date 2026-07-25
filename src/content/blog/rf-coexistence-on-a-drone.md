@@ -4,7 +4,7 @@ description: "A drone is a flying RF coexistence problem, and one of the radios 
 pubDate: 'Jul 25 2026'
 ---
 
-Day job, I do enterprise Wi-Fi. "Coexistence" there means keeping a few dozen access points and a pile of client devices from stepping on each other across 2.4 and 5 GHz. When it goes sideways you get a retransmit, a slow session, a cranky user. Annoying, sure, but nobody gets hurt.
+Day job, I'm a network engineer, and a big slice of that is enterprise Wi-Fi. "Coexistence" there means keeping a few dozen access points and a pile of client devices from stepping on each other across 2.4 and 5 GHz. When it goes sideways you get a retransmit, a slow session, a cranky user. Annoying, sure, but nobody gets hurt.
 
 Then I started building a drone that flies itself, and coexistence got a lot more literal.
 
