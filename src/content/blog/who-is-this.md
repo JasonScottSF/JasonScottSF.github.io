@@ -90,9 +90,9 @@ I was testing indoors and the tracker cheerfully found two people: me, and my re
 
 And here's the ugly part: re-identification makes this *worse*, not better. A mirror image of me looks almost exactly like me, so it produces almost exactly the same embedding. The recognition layer, the thing whose entire job is to tell people apart, will confidently confirm that my reflection is me. Every safeguard I have is looking at appearance, and appearance is precisely what a reflection copies perfectly. So follow mode would happily swing the camera toward the water, and none of my checks would object.
 
-I have a fix designed but not built, and I like it because it uses physics instead of more model. A reflection is upside down. So when two candidates both clear the threshold, flip the lower one vertically and score it again. A real person scores worse upside down. A reflection scores *better*. That turns "these two look identical, no idea" into an actual measurement, and it only costs anything in the rare moment the ambiguity exists.
+The fix I went with uses physics instead of more model, which is why I like it. A reflection is upside down. So when two candidates both clear the threshold, I flip the lower one vertically and score it again. A real person scores worse upside down. A reflection scores *better*, because flipping undoes the mirroring and lines it back up with the upright references. That turns "these two look identical, no idea" into an actual measurement, and it only costs anything in the rare moment the ambiguity actually exists. The rest of the time it never runs.
 
-Not built yet. Written down, which is most of the battle.
+It works. My reflection in the TV doesn't get a lock anymore. And the part I like best is that it's honest about *why* it works: it isn't a smarter model or a tuned threshold, it's a fact about the physical world (reflections are mirrored) turned into one extra comparison. The same move as the earlier point about knowing why something can't work. Here it's knowing exactly why something can, and building the smallest possible thing that exploits it.
 
 ## The failure that no knob fixes
 
