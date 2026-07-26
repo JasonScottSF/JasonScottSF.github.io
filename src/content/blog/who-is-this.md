@@ -26,7 +26,7 @@ The model I'm using is OSNet, which was designed specifically for person re-iden
 
 The cause is genuinely nasty, and I want to write it down because I lost real time to it.
 
-When you ask torchreid for an OSNet model, it will happily hand you one, pretrained, no complaints. But by default those weights are trained on ImageNet, which is a general object-classification dataset. That network learned to tell a dog from a truck from a coffee cup. It never learned to tell one person from another person, because that was never the task. So it produces embeddings that describe "this is a human-shaped thing," which every single person in frame satisfies equally well.
+When you ask torchreid for an OSNet model, it will happily hand you one, pretrained, no complaints. But by default those weights are trained on ImageNet, which is a general object-classification dataset. That network learned to tell a dog from a truck from a coffee cup. It never learned to tell one person from another person, because that was never the task. So it produces embeddings that describe "this is a human-shaped thing," which every single person in frame satisfies equally well. Turns out a gym bag on a couch also resembles a human in the eyes of the OSNet model.  
 
 What you actually need is the same architecture trained on a person re-identification dataset. I used the Market1501-trained checkpoint, downloaded separately and passed in explicitly. Same model, same code, completely different behavior. Suddenly the scores separated: the right person came back around 0.7 to 0.9, strangers sat well below.
 
@@ -82,7 +82,7 @@ Anything that makes a judgment call should be able to show you the arithmetic be
 
 Two honest limitations.
 
-**It's a person model, and only a person model.** OSNet was trained on people, so it recognizes people. It has no useful opinion about my cat. Recognizing a specific pet would mean a different, more general model running alongside this one, and I decided that wasn't worth the complexity for what this project needs.
+**It's a person model, and only a person model.** OSNet was trained on people, so it recognizes people. It has no useful opinion about my cat. Recognizing a specific pet would mean a different, more general model running alongside this one, and I decided that wasn't worth the complexity for what this project needs.  
 
 **Reflections.** This one's genuinely interesting, and it's the failure mode I'd worry about in the air.
 
