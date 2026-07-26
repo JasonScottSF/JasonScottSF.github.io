@@ -1,7 +1,7 @@
 ---
 title: 'Protecting the Control Link: RF Coexistence on a Multi-Radio Drone'
 description: "A drone is a flying RF coexistence problem, and one of the radios is not allowed to fail. Here's how I split up the spectrum so the link that matters never has to fight for air."
-pubDate: 'Jul 25 2026'
+pubDate: 'Jul 15 2026'
 ---
 
 Day job, I'm a network engineer, and a big slice of that is enterprise Wi-Fi. "Coexistence" there means keeping a few dozen access points and a pile of client devices from stepping on each other across 2.4, 5, and now 6 GHz. When it goes sideways you get a retransmit, a slow session, a cranky user. Annoying, sure, but nobody gets hurt.

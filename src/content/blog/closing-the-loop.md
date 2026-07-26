@@ -1,7 +1,7 @@
 ---
 title: "Closing the Loop: A Gimbal That Follows You"
 description: "The camera half of the Skydio dream: get a drone to see a person and physically keep them in frame. Here's the pipeline, the control loop, and the afternoon the camera decided to run away from me."
-pubDate: 'Jul 26 2026'
+pubDate: 'Jul 22 2026'
 ---
 
 The dream, the one everybody has the first time they see a Skydio, is a drone that just follows you. You walk, it flies along with you, and the camera stays locked on you the whole time. It looks like magic.

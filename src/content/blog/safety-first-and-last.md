@@ -1,7 +1,7 @@
 ---
 title: 'Safety First and Last'
 description: 'Everybody says safety first. Building a drone that flies itself taught me it is more like safety first and last, and mostly about protecting yourself from the guy who forgets things. That guy is me.'
-pubDate: 'Jul 25 2026'
+pubDate: 'Jul 3 2026'
 ---
 
 Everybody says "safety first." It's on posters. It's the thing you nod at on your way to the fun stuff. I used to nod at it too.

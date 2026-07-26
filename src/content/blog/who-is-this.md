@@ -1,7 +1,7 @@
 ---
 title: "Who Is This: Teaching the Camera to Recognize Me"
 description: "Following a box is easy. Following a specific person, even after they walk out of frame and come back, is a different problem. Here's re-identification on a Jetson, the weights that silently sabotaged it, and the bug that made a 100ms job take two minutes."
-pubDate: 'Jul 26 2026'
+pubDate: 'Jul 25 2026'
 ---
 
 Last post ended on an honest limitation. The gimbal would happily follow a person around the room, but it wasn't following *a person*. It was following a numbered box. Walk out of frame, walk back in, and you're a stranger with a new number. The camera had no idea you were the same person it had been glued to ten seconds earlier.
@@ -116,4 +116,4 @@ Before this, the camera followed a box and forgot you the moment you left. Now i
 
 That upgrade is what the whole re-identification detour bought, and standing in the room watching the gimbal swing back onto me specifically, after I'd walked out and come back, was the best moment of this build so far. Better than the first time it tracked anything at all, because this time it wasn't just seeing motion. It was making a decision about identity, on a little board bolted to a bench, in real time.
 
-Next up, the harder half: getting this off the bench and onto something that flies.
+But recognizing me turned out to be the point where it got good enough to *really* test, and testing it hard broke it in a dozen new and interesting ways. That's the next post: [the tracking got smarter](/blog/the-tracking-got-smarter/), one failed living-room experiment at a time.

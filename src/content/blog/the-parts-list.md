@@ -1,7 +1,7 @@
 ---
 title: "The Parts List (and the Ones That Didn't Make It)"
 description: "Everything currently bolted to the drone, plus a graveyard of the parts I tried, considered, or almost bought before backing away slowly."
-pubDate: 'Jul 26 2026'
+pubDate: 'Jul 9 2026'
 ---
 
 People always want the parts list. Fair enough, half the fun of a build like this is arguing about gear. So here's everything that's actually on the drone right now, followed by the more interesting list: the stuff I tried, considered, or almost bought before backing away slowly.
