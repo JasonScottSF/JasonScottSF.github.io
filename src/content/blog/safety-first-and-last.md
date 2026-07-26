@@ -58,6 +58,20 @@ Last one, and it's short.
 
 If I'm about to change something that could make the drone misbehave, I test it in a simulator first. I do not want to learn that my failsafe logic is backwards by watching my actual drone fly confidently into a tree. Sim is free. Trees are not. My face is definitely not.
 
+## A boundary beats a rule you have to remember
+
+Here's a small one that taught me a real lesson, and it came straight out of building the tracking.
+
+Some of the camera's search behavior only works when the camera is holding still. It compares each video frame to the one before it to spot movement, which is a fine trick on a tripod and a terrible one on a flying aircraft, where the whole world slides across the frame and the thing chases its own motion. On the bench, harmless. In the air, it's a search behavior that could point an armed aircraft's attention wherever the math wandered.
+
+My first instinct was a rule: remember to switch that mode off before flying. Which is exactly the kind of rule I already know I'll forget, because the whole point of this post is that I forget things. A rule you have to remember is a bug with a delay on it.
+
+So instead of a rule, I built a boundary. That behavior is now tagged as bench-only, and the software gates it on whether the aircraft is armed. Armed means flying, and flying means the feature isn't just switched off, it's gone. It disappears from the controls, and even if some stale command tried to switch it back on mid-flight, the code refuses. There is no sequence of me being forgetful that ends with it running in the air. I didn't make it my job to remember. I made it impossible to get wrong.
+
+And the direction of the failure matters. When the aircraft can't tell whether it's flying, it assumes it is, and keeps the bench stuff locked out. Uncertain defaults to safe, not to convenient. The one time that logic was backwards in my first draft, losing the flight-controller signal would have quietly re-enabled the bench behavior in mid-air. I caught it reading my own code back, which is its own small argument for reading your own code back.
+
+That's the whole idea in miniature. The best safety feature isn't the one you remember to use. It's the one you couldn't misuse if you tried.
+
 ## So, first and last
 
 Safety first, because it's where every real decision starts. What's the default, who's in charge, what happens when I forget.
