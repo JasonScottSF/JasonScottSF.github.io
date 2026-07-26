@@ -94,6 +94,22 @@ I have a fix designed but not built, and I like it because it uses physics inste
 
 Not built yet. Written down, which is most of the battle.
 
+## The failure that no knob fixes
+
+Here's the one I want to be honest about, because it's the most important thing I learned.
+
+A roommate walked through the room while I had a lock on myself. Bad lighting, both of us basically silhouettes, similar build, both in dark clothing. I walked out one door, the camera did its thing and reset to search, he walked in another door, and it locked onto him. Then the reverse: he walked out, I walked back in, and it grabbed me. It could not tell us apart.
+
+My first instinct was that the match threshold was too low. So I pulled the actual scores it logged, and that's where it got interesting. Every comparison logs a number between 0 and 1, how close the person in frame is to the stored reference. When it was me, I scored things like 0.79, 0.89, 0.93. When it was him, he scored 0.77, 0.82, 0.87, 0.91. Look at those two lists. They completely overlap. There is no number you can draw a line at that keeps me and drops him, because on any given frame he might score higher than I do.
+
+That's the whole lesson. The threshold wasn't wrong. The *input* had no answer in it. Two silhouettes with the same build and the same dark clothing produce nearly the same fingerprint, because the fingerprint is built almost entirely from clothing color and texture and body shape, and bad light erases all three. The model wasn't failing. I'd handed it an image with the identifying information already removed and asked it to identify us anyway.
+
+No amount of tuning fixes that. Raising the threshold would just make it refuse to lock onto *anyone*, me included. The fix isn't in the code at all. It's a light switch. Or an uploaded reference photo taken in decent light, so there's real texture to match against instead of silhouette-versus-silhouette.
+
+There was also a nastier second effect hiding in there. The system keeps a small rolling gallery of the locked person, refreshed every couple of seconds while they're in view, so it can recognize them across different poses. But the moment it locked onto the wrong person, it started refreshing that gallery with *him*. So it was actively learning the wrong identity, cementing its own mistake, getting more confident about exactly the thing it had gotten wrong. I now freeze that gallery once it's built, so a bad lock can't poison it further. Doesn't fix the underlying "these two are identical to the sensor" problem, but at least the system stops digging.
+
+The reason I'm dwelling on this: the useful skill wasn't building the re-identification. It was reading the score data and recognizing that the problem was upstream of anything I could code. Knowing *why* something can't work, with the numbers to prove it, is worth more than a clever hack that papers over it and fails in the field when you're trusting it. A drone that confidently follows the wrong person is worse than one that admits it lost you.
+
 ## What this changed
 
 Before this, the camera followed a box and forgot you the moment you left. Now it follows *you*, and it can find you again.
