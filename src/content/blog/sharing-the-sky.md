@@ -26,7 +26,11 @@ So the position has to come from the drone's own GPS, the one already wired into
 
 Once I know both positions, the rest is geometry I half-remembered and re-derived badly a couple of times. Each aircraft's broadcast is a latitude, a longitude, and an altitude. What I actually want is human, and camera-shaped: how far away is it, what compass bearing do I turn to face it, and how high do I tilt up to see it. Distance and bearing come off the usual great-circle math. The tilt, the elevation angle, is just the altitude difference over the horizontal distance, run through an arctangent.
 
-Sorted by that elevation angle, the list suddenly reads like something a person would say. The thing highest in my sky floats to the top. The airliner grinding along at thirty-five thousand feet, technically overhead but a barely-there speck, sinks down where it belongs. What comes out the other end is a live, ranked answer to "what's up there, and where do I look," refreshed every several seconds, sitting right on the pre-flight page next to the battery and GPS readouts.
+Sorted by that elevation angle, the list suddenly reads like something a person would say. The thing highest in my sky floats to the top. The airliner grinding along at thirty-five thousand feet, technically overhead but a barely-there speck, sinks down where it belongs. What comes out the other end is a live, ranked answer to "what's up there, and where do I look," refreshed every several seconds, sitting right on the pre-flight page next to the battery and GPS readouts, and available as an overlay painted straight onto the camera view.
+
+![The dashboard running live. In the top-left corner, an ADS-B overlay reads "32 aircraft overhead" and lists the four nearest by callsign, type, distance, bearing, and elevation angle. It is painted over the camera's view of a residential street where the tracker has simultaneously boxed two cars. On the right are the tracked-target list, the gimbal controls, and a zoom slider.](../../assets/full_display.png)
+
+*The whole thing on one screen, one second. Top-left: the ranked ADS-B readout, real aircraft with real bearings. Boxed below: the tracker doing its own separate job. Neither knows or cares about the other, which is exactly the point.*
 
 ## The part I didn't expect
 
