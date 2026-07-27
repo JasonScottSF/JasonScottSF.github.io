@@ -12,6 +12,16 @@ Here's the thing about a drone: it's a few pounds of spinning carbon fiber and l
 
 That's not what I expected going in, so let me walk through what it actually means.
 
+## There is always a hand on the controls
+
+I keep saying this thing "flies itself," and I need to be careful with that phrase, because it is shorthand, not the literal truth, and the literal truth matters.
+
+There is always a human in the loop. Me, or whoever is flying, standing there with a controller, watching the aircraft, able to take manual command in an instant, with an independent switch that cuts the clever stuff and hands control straight back. Everything I have written about here, the tracking, the recognition, the way it notices other aircraft in the sky, is *assistance*. It points the camera, it watches, it flags. It does not get the final say over where a few pounds of spinning carbon fiber goes. A person does. Always.
+
+That is not just my preference, it is the law, and it is a good law. You are not allowed to put an aircraft in the sky that no human can intervene in. The rules I fly under (Part 107, for the small-drone crowd) require a remote pilot in command who keeps eyes on the aircraft and can take over at any moment, and I am working toward that certificate deliberately, not treating it as a box to tick. "Fully autonomous, nobody watching" is not a thing I am building, because it is not a thing anyone is allowed to build.
+
+So when I say it flies itself, hear it the way you would "the car parks itself": a very capable assistant, with a human right there whose hand is never far from the wheel.
+
 ## I am going to forget things
 
 Not "might." Will.
