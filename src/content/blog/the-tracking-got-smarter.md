@@ -62,6 +62,10 @@ It sounds like the least dramatic thing here and it's the one I'm proudest of, s
 
 It does this to more than one thing at a time, too. On a quiet street it will hold a couple of parked cars and a couple of people at once, each with its own steady label and its own number, without any of them stealing another's identity. That sounds obvious until you remember it's deciding, every single frame, which of this frame's boxes is the same object as which of last frame's.
 
+![The tracker holding four objects at once on a residential street: two cars labeled "#1 car 0.93" and "#2 car 0.90", and two people labeled "#10 person 0.72" and "#15 person 0.81", each boxed with its own persistent track number.](../../assets/tracking-multiobject.png)
+
+*Four things at once, four steady IDs, one frame. Two cars, two people, nobody trading identities.*
+
 The part that matters for where this is headed: a car that close is actually moving *faster across my frame* than a distant airplane will. So raw speed, the thing I'd most have bet would be the wall, is not going to be the wall. Birds will still be their own kind of hard, small and erratic and allergic to being predicted. But quickness, it turns out, the pipeline has.
 
 ## What actually got smarter
