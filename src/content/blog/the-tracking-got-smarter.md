@@ -54,6 +54,16 @@ In bad light we were both just silhouettes, similar build, both in dark clothes,
 
 Because tap-to-lock keeps learning the locked person as they move, the moment it locked onto the wrong guy it started learning *him* as me. It was teaching itself the wrong answer, getting more confident about exactly the thing it had gotten wrong. A convenience feature had quietly become a feedback loop where a mistake trains the system to keep making it. The fix is to freeze what it's learned once it's captured, so a bad lock can't rewrite who you are. That doesn't make two silhouettes distinguishable, nothing could, but it stops the system from digging its own hole deeper. The lesson I took: anything that learns automatically will just as happily learn the wrong thing, so the moment you let a system teach itself, you have to ask what happens when it's wrong.
 
+## The one that didn't need fixing
+
+Almost everything in this post is a failure I chased down. This one is the opposite, and it's the one I keep bringing up. A car went past at maybe twenty-five miles an hour, and the camera picked it out, labeled it, and tracked it clean across the frame and back out, in real time, with me doing nothing.
+
+It sounds like the least dramatic thing here and it's the one I'm proudest of, so let me explain why. A car that close is a genuinely fast target in the way a camera cares about: it crosses the whole frame in about a second. For the box to stay glued to it, every stage has to keep up, the capture, the detection, the tracking, the video stream, the draw on my screen, with little enough lag that the label lands on the car and not where the car just was. When any stage drags, you can see it: the box smears along behind the thing or drops it halfway across. It didn't. And the track held a single identity the whole crossing and let go cleanly at the edge, which is the tracker earning its keep, not just the detector flickering boxes.
+
+It does this to more than one thing at a time, too. On a quiet street it will hold a couple of parked cars and a couple of people at once, each with its own steady label and its own number, without any of them stealing another's identity. That sounds obvious until you remember it's deciding, every single frame, which of this frame's boxes is the same object as which of last frame's.
+
+The part that matters for where this is headed: a car that close is actually moving *faster across my frame* than a distant airplane will. So raw speed, the thing I'd most have bet would be the wall, is not going to be the wall. Birds will still be their own kind of hard, small and erratic and allergic to being predicted. But quickness, it turns out, the pipeline has.
+
 ## What actually got smarter
 
 None of this came from me being clever up front. Every improvement in this post exists because I took the thing into a real room, watched it fail in a specific way, and fixed that exact failure. Point-to-lock came from the photo upload being annoying. The visual steering came from an afternoon of wrong math. Hunt came from a camera staring at the wrong door. The pulse-and-settle came from it chasing its own motion into a wall. The shape check came from it locking onto my hand. The frozen appearance came from it teaching itself the wrong person.
